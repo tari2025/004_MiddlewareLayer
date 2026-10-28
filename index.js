@@ -102,7 +102,8 @@ function validateBody(schema) {
     }
     //endpoint untuk get
 app.get('/', async (req, res) => {
-        const result = await pool.query('SELECT * FROM biodata ORDER BY id');  
+        const result = await pool.query(
+            'SELECT * FROM biodata ORDER BY id');  
 )
 
 return successResponse(
@@ -111,3 +112,27 @@ return successResponse(
     result.rows);
 )
 })
+
+//endpoint post mengirim data ke database
+app.post(
+    '/biodata',
+    validateBody(biodataSchema),
+    async (req, res) => {   
+        const { id, nama, nim, kelas } = req.body;  
+
+        conts result = await pool.query(
+            'INSERT INTO biodata (id, nama, nim, kelas) 
+            VALUES ($1, $2, , $4) 
+            RETURNING *',
+            [id ?? null, nama, nim, kelas]  
+
+)
+        return successResponse(
+            res, 
+            'Data berhasil ditambahkan', 
+            result.rows[0], 
+            201);   
+        )
+    )
+)
+}
