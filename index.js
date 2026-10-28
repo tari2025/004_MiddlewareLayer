@@ -17,4 +17,15 @@ const pool = new pg.Pool({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//middleware
+//middleware logging
+app.use((req, res, next) => {
+  cons start = Date.now();
+  
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+
+
+    console.log(`${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`);
+  });   
+  next();
+});
