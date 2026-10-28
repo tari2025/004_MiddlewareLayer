@@ -70,6 +70,33 @@ function validateBody(schema) {
             convert: true,
             allowUnknown: false,
         });
+        if (error) { 
+            return errorResponse(res, "Validation input gagal", 400, errorDetails.map(item => ({
+                field: item.path.join('.'),
+                message: item.message 
+                
+            })));
+            req. body = value;
+            next();
+        }
+    };
+    //middleware untuk validasi params
+    function validateParams(schema) {
+        return (req, res, next) => {
+            const { error, value } = schema.validate(req.params, {
 
         
-           
+            });
+            if (error) {
+                return errorResponse(
+                    res, 'Parameter tidak valid', 400, 
+                    errorDetails.map(item => ({
+                        field: item.path.join('.'),
+                        message: item.message
+                    }))
+                );
+            }
+            req.params = value;
+            next();
+        };
+    }
